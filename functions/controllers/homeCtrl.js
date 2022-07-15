@@ -1,8 +1,10 @@
-const db = require("../db/firestore");
-const indexPage = async (req, res) => {
+const db = require("../models/firestore");
+const jwt = require('jsonwebtoken');
+const homePage = async (req, res) => {
+  const decoded = jwt.verify(req.cookies.__session, 'klfkawefoauiwhnefiua');
   const kas = db.collection('kas');
   const data = await kas.orderBy('tanggal', 'asc').get();
-  res.render("pages/index", { data: data });
+  res.render("pages/home", { data: data,name:decoded.data.name });
 };
 const malikPage = async (req, res) => {
   const kas = db.collection('kas');
@@ -40,7 +42,7 @@ const testData = async (req, res) => {
   res.send("test success");
 };
 module.exports = {
-  indexPage,
+  homePage,
   insertData,
   updateData,
   deleteData,

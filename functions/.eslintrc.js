@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   env: {
     es6: true,
+    requireConfigFile: false,
     node: true,
   },
   extends: [
@@ -14,5 +15,5 @@ module.exports = {
     "require-jsdoc": 0,
     "linebreak-style": 0,
   },
-  parser: "babel-eslint",
+  "parser": "@babel/eslint-parser",
 };
