@@ -2,23 +2,16 @@ const jwt = require('jsonwebtoken');
 const db = require("../models/firestore");
 
 const loginPage = async (req, res) => {
-  if (req.cookies.__session) {
+  if (req.session.token) {
     res.redirect('/');
-   } else { 
-    res.render("pages/login");
+  } else {
+    res.render("pages/login", { message: req.flash('message') });
   }
 };
 const isLoggedIn = async (req, res, next) => {
-  res.setHeader('Cache-Control', 'private');
-  if (req.cookies.__session) {
-    const decoded = jwt.verify(req.cookies.__session, 'klfkawefoauiwhnefiua');
-    const kas = db.collection('user');
-    const data = await kas.where("username", "==", decoded.data.username).get();
-    const loginData=[];
-    data.forEach(element => {
-      loginData.push(element.data());
-    });
-    if (decoded.data.username == loginData[0].username) {
+  if (req.session.token) {
+    const decoded = jwt.verify(req.session.token, 'klfkawefoauiwhnefiua');
+    if (decoded.data.username) {
       next();
     } else {
       res.redirect('/login');
@@ -27,34 +20,62 @@ const isLoggedIn = async (req, res, next) => {
     res.redirect('/login');
   }
 };
+const isLoggedInAdmin = async (req, res, next) => {
+  if (req.session.token) {
+    const decoded = jwt.verify(req.session.token, 'klfkawefoauiwhnefiua');
+    if (decoded.data.status == 'admin') {
+      next();
+    } else {
+      res.render('pages/forbidden', {name: decoded.data.name });
+    }
+  } else {
+    res.redirect('/login');
+  }
+};
 const login = async (req, res) => {
   const kas = db.collection('user');
-  const data = await kas.where("username", "==", req.body.username).get();
-  const loginData = [];
+  const data = await kas.where("username", "==", req.body.username).where("password", "==", req.body.password).get();
+  const loginData = {
+    username: null,
+    password: null,
+    name: null,
+    status: null,
+  };
   data.forEach(element => {
-    loginData.push(element.data());
+    loginData.username = element.data().username;
+    loginData.password = element.data().password;
+    loginData.name = element.data().name;
+    loginData.status = element.data().status;
   });
-  if (loginData && loginData[0].password == req.body.password) {
+  if (loginData.username == req.body.username && loginData.password == req.body.password) {
     let data = {
-      username: loginData[0].username,
-      password: loginData[0].password,
-      name: loginData[0].name
+      username: loginData.username,
+      password: loginData.password,
+      name: loginData.name,
+      status: loginData.status
     }
     var token = jwt.sign({ data }, 'klfkawefoauiwhnefiua');
-    res.cookie('__session', token);
+    req.session.token = token;
     res.redirect('/');
   } else {
-    res.render("pages/login", { alert: "Username atau password anda Salah" });
+    req.flash('message', 'Username atau password anda Salah');
+    res.redirect('/login');
   }
 }
 const logout = async (req, res) => {
-  res.clearCookie('__session');
-  res.redirect('/');
+  req.session.destroy((err) => {
+    if (err) {
+      return console.log(err);
+    }
+    res.clearCookie('__session');
+    res.redirect('/');
+  });
 };
 
 module.exports = {
   loginPage,
   isLoggedIn,
+  isLoggedInAdmin,
   login,
   logout,
 };

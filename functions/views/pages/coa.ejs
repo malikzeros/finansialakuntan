@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Akuntansi</div>
+            </a>
+
+            <hr class="sidebar-divider my-0" />
+
+            <%- include("partials/menu") %>
+
+                <hr class="sidebar-divider d-none d-md-block" />
+
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
+
+                    <ul class="navbar-nav ml-auto">
+
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <%= name %>
+                                </span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg" />
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="container-fluid">
+                    <h1 class="h3 mb-2 text-gray-800">COA</h1>
+                    <p class="mb-4">Chart Of Account</a>.</p>
+                    <hr>
+                    <form class="user" method="post" action="coa/add">
+                        <div class="form-group row">
+                            <div class="col-sm-4 mb-3 mb-sm-0">
+                                <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                    placeholder="Account" name="account">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                    placeholder="name" name="name">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                    placeholder="klp" name="klp">
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Tambah">
+                    </form>
+                    <hr>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Chart Of Account</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Account</th>
+                                            <th>Name</th>
+                                            <th>Klp</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Account</th>
+                                            <th>Name</th>
+                                            <th>Klp</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <% data.forEach(element=> {%>
+                                            <tr>
+                                                <td>
+                                                    <%=element.id%>
+                                                </td>
+                                                <td>
+                                                    <%=element.data().name%>
+                                                </td>
+                                                <td>
+                                                    <%=element.data().klp%>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+
+                                    </tbody>
+                                </table>
+                                Rumus / persamaan Akuntansi:<br>
+                                Aset = Hutang + Modal<br>
+                                Aset = Hutang + Modal + Laba (Rugi)<br>
+                                Laba (Rugi) = Pendapatan – Biaya<br>
+                                Aset = Hutang + Modal + Pendapatan – Biaya<Br>
+                                Aset + Biaya = Hutang + Modal + Pendapatan<br>
+                                Keterangan:<br>
+                                Digit pertama<br>
+                                Untuk kode group/kelompok induk rekening dalam akuntansi seperti<br>
+                                1 untuk kelompok Aktiva<br>
+                                2 untuk kelompok Hutang<br>
+                                3 untuk kelompok Modal/Prive<br>
+                                4 untuk kelompok Pedapatan<br>
+                                5 untuk kelompok Beban<br>
+                                Digit ke dua<br>
+                                Untuk kode sub kelompok/detail dalam akuntansi seperti:<br>
+                                1 untuk sub kelompok aktiva lancar<br>
+                                2 untuk sub kelompok aktiva tetap<br>
+                                Digit ke tiga dan ke empat<br>
+                                Untuk nomor urut dari setiap rekening<br>
+                                Contoh: 1 1 0 1 KA<br>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Select "Logout" below if you are ready to end your current session.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/script') %>
+</body>
+
+</html>
